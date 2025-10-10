@@ -1,0 +1,318 @@
+
+body {
+    background: #222;
+    color: hotpink;
+    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+        helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+    
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main,
+.newPostContainer {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+
+.newPostContainer {
+    justify-content: center;
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #1a1a1a;
+}
+
+
+h1 { font-size: 3.5rem; margin-bottom: 0.5rem; }
+h2 { font-size: 1.5rem; font-weight: 300; margin-top: 0; margin-bottom: 2rem; }
+h3 { color: #eee; } 
+
+
+.newTitle { font-size: 3rem; margin-bottom: 0.5rem; }
+.newSub { font-size: 1.5rem; font-weight: 300; margin-bottom: 3rem; }
+
+
+.posts-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+}
+
+.post-tile {
+    flex-grow: 1;
+    flex-basis: 300px;
+    max-width: 400px;
+    background-color: #333;
+    border: 1px solid hotpink;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
+    transition: transform 0.2s ease-in-out;
+}
+
+.post-tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
+}
+
+.post-tile h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: hotpink;
+}
+
+
+.newForm {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.newForm label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: -1rem;
+}
+
+.newForm input[type="text"] {
+    background-color: #444;
+    border: 1px solid hotpink;
+    border-radius: 5px;
+    color: #eee;
+    padding: 12px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#createPost {
+    background: hotpink;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 12px 20px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s;
+}
+
+#createPost:hover {
+    background-color: #ff85c2;
+}
+
+
+#newPost {
+  background: hotpink;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.newForm textarea {
+    background-color: #444;
+    border: 1px solid hotpink;
+    border-radius: 5px;
+    color: #eee;
+    padding: 12px;
+    font-size: 1rem;
+    font-family: inherit; 
+    width: 100%;
+    box-sizing: border-box;
+    resize: none; 
+    overflow-y: hidden;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 2rem;
+    font-family: 'Roboto', sans-serif;
+    color: #008080; 
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    margin-bottom: 1rem;
+}
+
+.back-link:hover {
+    color: #005a5a;
+    transform: translateX(-4px); 
+}
+
+.post-body {
+
+  color: pink;
+  margin-top: 2rem;
+  font-size: 1.2rem; 
+  font-family: 'Lora', 'Georgia', serif; 
+
+  line-height: 1.8; 
+}
+
+.post-container {
+  max-width: 75%; 
+  margin: 0 auto; 
+  padding: 1rem;  
+  box-sizing: border-box; 
+}
+
+
+
+.delete-form {
+    margin-top: 2rem;
+    text-align: right;
+}
+
+.delete-button {
+    background-color: #e74c3c; 
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    margin-top: 1rem;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.delete-button:hover {
+    background-color: #c0392b; 
+}
+
+.post-actions {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 1rem; 
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+}
+
+.edit-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    text-align: center;
+    margin-top: -2.5rem;
+}
+
+
+.edit-button{
+    background-color: #3498db; 
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.2s ease;
+    margin-top: 1rem;
+}
+
+.edit-button:hover, .submit-button:hover {
+    background-color: #2980b9; 
+}
+
+
+.form-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; 
+    margin-top: 2rem;
+    margin-bottom: -1rem;
+}
+
+.form-container label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #eee;
+    text-align: left;
+    margin-bottom: -1rem;
+}
+
+.form-container input[type="text"],
+.form-container textarea {
+    background-color: #444;
+    border: 1px solid hotpink;
+    border-radius: 5px;
+    color: #eee;
+    padding: 12px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.form-container input[type="text"]:focus,
+.form-container textarea:focus {
+    outline: none;
+    border-color: #ff85c2;
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+}
+
+.form-container textarea {
+    resize: vertical;
+    min-height: 180px;
+}
+
+.submit-button {
+    background: hotpink;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 12px 20px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background-color 0.2s;
+    margin-bottom: 0.5rem;
+}
+
+.submit-button:hover {
+    background-color: #ff85c2;
+}
+
+.hometitle {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    color: hotpink;
+    text-shadow: 0 0 5px rgba(255, 105, 180, 0.7);
+}

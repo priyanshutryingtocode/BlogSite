@@ -1,0 +1,35 @@
+<%- include('partials/header.ejs') %>
+
+<body>
+    <div class="newPostContainer">
+        <h1 class="newTitle">BlogNet</h1>
+        <h2 class="newSub">Create a new post</h2>
+
+        <form id="formPost" class="newForm" action="/" method="POST">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required>
+            
+            <label for="content">Content</label>
+            <textarea id="content" name="content" rows="3" placeholder="Your thoughts go here..." required></textarea>
+
+            <button id="createPost" type="submit">POST</button>
+        </form>
+    </div>
+
+    <script>
+        const textarea = document.getElementById('content');
+
+        const autoResize = () => {
+            textarea.style.height = 'auto';
+            
+            textarea.style.height = textarea.scrollHeight + 'px';
+        };
+
+        textarea.addEventListener('input', autoResize);
+
+        autoResize();
+    </script>
+
+    <%- include('partials/footer.ejs') %>
+
+    

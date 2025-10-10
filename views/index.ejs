@@ -1,0 +1,27 @@
+<%- include('partials/header.ejs') %>
+
+<body>
+  <main>
+    <h1 class="hometitle">BlogNet</h1>
+    <h2>For all your eternal and ephemeral thoughts</h2>
+
+    <div class="posts-container">
+        <% if (allPosts.length > 0) { %>
+            <% allPosts.forEach(post => { %>
+                <div class="post-tile">
+                    <h2>
+                      <a href="/posts/<%= post.slug %>" style="color: hotpink; text-decoration: none; font-weight: bold; "><%= post.title %></a>
+                    </h2>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <h3>No posts to display. Create one!</p>
+        <% } %>
+    </div>
+
+    <button id="newPost" type="button">
+        <a href="/new" style="text-decoration: none; color: white;">+</a>
+    </button>
+
+
+<%- include('partials/footer.ejs') %>
