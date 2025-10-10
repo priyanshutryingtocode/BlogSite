@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import slugify from 'slugify';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 let posts = [
     {
