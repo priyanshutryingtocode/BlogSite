@@ -1,107 +1,128 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import slugify from 'slugify';
+import pg from 'pg';
+import env from 'dotenv'; 
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
-let posts = [
-    {
-        id: 1,
-        title: "Welcome to My Blog",
-        content: "This is the very first post on my new blog. I'm excited to share my thoughts and ideas with the world. Stay tuned for more content!",
-        slug: "welcome-to-my-blog"
-    },
-    {
-        id: 2,
-        title: "A Guide to Modern JavaScript",
-        content: "<h2>Arrow Functions & Promises</h2><p>Modern JavaScript has introduced powerful features. Arrow functions provide a concise syntax, while Promises help manage asynchronous operations gracefully. We'll dive deeper in future posts.</p>",
-        slug: "a-guide-to-modern-javascript"
-    },
-    {
-        id: 3,
-        title: "Cooking Tips: The Perfect Pizza Dough!",
-        content: "Making pizza dough from scratch is easier than you think! <blockquote>The secret to a great crust is a slow, cold fermentation in the refrigerator.</blockquote> It develops flavor and improves the texture.",
-        slug: "cooking-tips-the-perfect-pizza-dough"
-    }
-];
+env.config(); 
 
+const db = new pg.Client({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+});
 
-let lastId = 4; 
+db.connect();
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 
-app.get('/', (req, res) => {
-    res.render("index.ejs", { allPosts: posts });
+app.get('/', async (req, res) => {
+    try {
+        const result = await db.query("SELECT * FROM posts ORDER BY id ASC");
+        const posts = result.rows; 
+        res.render("index.ejs", { allPosts: posts });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching posts");
+    }
 });
+
 
 app.get('/new', (req, res) => {
     res.render("new.ejs");
 });
 
-app.post("/", (req, res) => {
-    const newPost = {
-        id: lastId++,
-        title: req.body.title,
-        content: req.body.content,
-        slug: slugify(req.body.title, { lower: true, strict: true })
-    };
-    posts.push(newPost);
-    res.redirect("/");
+
+app.post("/", async (req, res) => {
+    const title = req.body.title;
+    const content = req.body.content;
+    const slug = slugify(title, { lower: true, strict: true });
+
+    try {
+        await db.query(
+            "INSERT INTO posts (title, content, slug) VALUES ($1, $2, $3)",
+            [title, content, slug]
+        );
+        res.redirect("/");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error creating post");
+    }
 });
-app.get("/posts/:postSlug", (req, res) => {
+
+
+app.get("/posts/:postSlug", async (req, res) => {
     const requestedSlug = req.params.postSlug;
-    const postIndex = posts.findIndex(post => post.slug === requestedSlug);
 
-    if (postIndex > -1) {
-        const post = posts[postIndex];
-        res.render("post.ejs", {
-            post: post,
-            index: postIndex,
-        });
-    } else {
-        res.status(404).send("Post not found");
+    try {
+        const result = await db.query("SELECT * FROM posts WHERE slug = $1", [requestedSlug]);
+        
+        if (result.rows.length > 0) {
+            const post = result.rows[0];
+            res.render("post.ejs", {
+                post: post,
+                index: post.id, 
+            });
+        } else {
+            res.status(404).send("Post not found");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
     }
 });
 
-app.post("/delete/:id", (req, res) => {
+
+app.post("/delete/:id", async (req, res) => {
   const postId = parseInt(req.params.id);
-  const postIndex = posts.findIndex(post => post.id === postId);
-  if (postIndex > -1) {
-    posts.splice(postIndex, 1);
-  } 
-  res.redirect("/");
+  
+  try {
+      await db.query("DELETE FROM posts WHERE id = $1", [postId]);
+      res.redirect("/");
+  } catch (err) {
+      console.error(err);
+      res.status(500).send("Error deleting post");
+  }
 });
 
-app.get("/edit/:id", (req, res) => {
+app.get("/edit/:id", async (req, res) => {
     const postId = parseInt(req.params.id);
-    const post = posts.find(p => p.id === postId);
 
-    if (post) {
-        res.render("edit.ejs", { post: post });
-    } else {
-        res.status(404).send("Post not found");
+    try {
+        const result = await db.query("SELECT * FROM posts WHERE id = $1", [postId]);
+        if (result.rows.length > 0) {
+            res.render("edit.ejs", { post: result.rows[0] });
+        } else {
+            res.status(404).send("Post not found");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
     }
 });
 
-
-app.post("/edit/:id", (req, res) => {
+app.post("/edit/:id", async (req, res) => {
     const postId = parseInt(req.params.id);
-    const postIndex = posts.findIndex(p => p.id === postId);
+    const title = req.body.postTitle;
+    const content = req.body.postContent;
+    const slug = slugify(title, { lower: true, strict: true });
 
-    if (postIndex > -1) {
-
-        posts[postIndex].title = req.body.postTitle;
-        posts[postIndex].content = req.body.postContent;
-
-        posts[postIndex].slug = slugify(req.body.postTitle, { lower: true, strict: true });
-
-
-        res.redirect(`/posts/${posts[postIndex].slug}`);
-    } else {
-        res.status(404).send("Post not found");
+    try {
+        await db.query(
+            "UPDATE posts SET title = $1, content = $2, slug = $3 WHERE id = $4",
+            [title, content, slug, postId]
+        );
+        res.redirect(`/posts/${slug}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error updating post");
     }
 });
 
