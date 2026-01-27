@@ -1,0 +1,1 @@
+A simple online blog appplication built using EJS, Node.js, and Express.js. It allows users to create, read, update, and delete blog posts (CRUD operations). It stores blog posts using PostgreSQL as the database.
